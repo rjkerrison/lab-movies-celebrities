@@ -33,12 +33,21 @@ router.post('/create', async (req, res, next) => {
 });
 
 router.route(`/:id`)
-  .all((req, res, next) => {
+  .all(async (req, res, next) => {
     try {
       req.documentInfo = {
         id: req.params.id,
         model: `movie`
       };
+
+      const movie = await Movie.findById(req.documentInfo.id);
+
+      if (!movie) {
+        const err = new Error();
+
+        err.kind = `ObjectId`;
+        throw err;
+      }
 
       next();
     } catch (error) {

@@ -23,12 +23,21 @@ router.post('/create', async (req, res, next) => {
 });
 
 router.route(`/:id`)
-  .all((req, res, next) => {
+  .all(async (req, res, next) => {
     try {
       req.documentInfo = {
         id: req.params.id,
         model: `celebrity`
       };
+
+      res.celebrity = await Celebrity.findById(req.documentInfo.id);
+
+      if (!res.celebrity) {
+        const err = new Error();
+
+        err.kind = `ObjectId`;
+        throw err;
+      }
 
       next();
     } catch (error) {
@@ -38,9 +47,7 @@ router.route(`/:id`)
   
   .get(async (req, res, next) => {
     try {
-      const celebrity = await Celebrity.findById(req.documentInfo.id);
-
-      return res.status(200).json(celebrity);
+      return res.status(200).json(res.celebrity);
     } catch (error) {
       next(error);
     }
