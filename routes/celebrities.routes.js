@@ -7,10 +7,19 @@ const Celebrity = require("../models/Celebrity.model.js");
 router.get("/", async (req, res, next) => {
   try {
     const celebrities = await Celebrity.find();
-    console.log("celebrities");
-    console.log(celebrities);
 
     res.status(200).json(celebrities);
+  } catch (err) {
+    console.error(err);
+    next();
+  }
+});
+
+router.get("/:id", async (req, res, next) => {
+  try {
+    const celebrityDetails = await Celebrity.findById(req.params.id);
+
+    res.status(200).json(celebrityDetails);
   } catch (err) {
     console.error(err);
     next();
@@ -38,6 +47,16 @@ router.post("/", async (req, res, next) => {
 
       res.status(201).json(celebrity);
     }
+  } catch (err) {
+    console.error(err);
+    next();
+  }
+});
+
+router.delete("/:id", async (req, res, next) => {
+  try {
+    await Celebrity.findByIdAndDelete(req.params.id);
+    res.status(204).json;
   } catch (err) {
     console.error(err);
     next();
