@@ -23,9 +23,22 @@ router.post('/create', async (req, res, next) => {
 });
 
 router.route(`/:id`)
+  .all((req, res, next) => {
+    try {
+      req.documentInfo = {
+        id: req.params.id,
+        model: `celebrity`
+      };
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  })
+  
   .get(async (req, res, next) => {
     try {
-      const celebrity = await Celebrity.findById(req.params.id);
+      const celebrity = await Celebrity.findById(req.documentInfo.id);
 
       return res.status(200).json(celebrity);
     } catch (error) {
@@ -35,7 +48,7 @@ router.route(`/:id`)
 
   .delete(async (req, res, next) => {
     try {
-      await Celebrity.findByIdAndRemove(req.params.id);
+      await Celebrity.findByIdAndRemove(req.documentInfo.id);
 
       return res.sendStatus(204);
     } catch (error) {
@@ -45,7 +58,7 @@ router.route(`/:id`)
 
   .post(async (req, res, next) => {
     try {
-      const updatedCelebrity = await Celebrity.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      const updatedCelebrity = await Celebrity.findByIdAndUpdate(req.documentInfo.id, req.body, { new: true });
 
       return res.status(200).json(updatedCelebrity);
     } catch (error) {

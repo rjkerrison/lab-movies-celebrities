@@ -21,7 +21,7 @@ module.exports = (app) => {
 
       switch (e.kind) {
         case `ObjectId`:
-          errors.push(`No such celebrity with id: ${req.params.id}`);
+          errors.push(`No such ${req.documentInfo.model} with id: ${req.documentInfo.id}`);
           break;
         case `required`:
           errors.push(`${e.path} is required`);

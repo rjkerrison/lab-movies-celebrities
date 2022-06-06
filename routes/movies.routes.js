@@ -33,9 +33,22 @@ router.post('/create', async (req, res, next) => {
 });
 
 router.route(`/:id`)
+  .all((req, res, next) => {
+    try {
+      req.documentInfo = {
+        id: req.params.id,
+        model: `movie`
+      };
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  })
+
   .get(async (req, res, next) => {
     try {
-      const movie = await Movie.findById(req.params.id).populate(`cast`);
+      const movie = await Movie.findById(req.documentInfo.id).populate(`cast`);
 
       return res.status(200).json(movie);
     } catch (error) {
@@ -45,7 +58,7 @@ router.route(`/:id`)
 
   .delete(async (req, res, next) => {
     try {
-      await Movie.findByIdAndRemove(req.params.id);
+      await Movie.findByIdAndRemove(req.documentInfo.id);
 
       return res.sendStatus(204);
     } catch (error) {
@@ -55,7 +68,7 @@ router.route(`/:id`)
 
   .post(async (req, res, next) => {
     try {
-      const updatedMovie = await Movie.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      const updatedMovie = await Movie.findByIdAndUpdate(req.documentInfo.id, req.body, { new: true });
 
       return res.status(200).json(updatedMovie);
     } catch (error) {
