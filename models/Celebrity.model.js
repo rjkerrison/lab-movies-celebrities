@@ -7,6 +7,6 @@ const celebritySchema = new mongoose.Schema({
   catchphrase: String,
 });
 
-const Celebrity = new mongoose.model("Celebrity", celebritySchema);
+const Celebrity = mongoose.model("Celebrity", celebritySchema);
 
 module.exports = Celebrity;

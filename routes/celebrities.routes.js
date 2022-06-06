@@ -6,8 +6,8 @@ const Celebrity = require("../models/Celebrity.model");
 router.post("/celebrities/create", async (req, res, next) => {
   try {
     const newCelebrity = await req.body;
-    const createdCelebrity = Celebrity.createOne(newCelebrity);
-    res.status(201).body = createdCelebrity;
+    const createdCelebrity = await Celebrity.create(newCelebrity);
+    res.status(201).json(createdCelebrity);
     res.status(201).send("Successfuly created new celebrity");
   } catch (error) {
     res
@@ -15,6 +15,15 @@ router.post("/celebrities/create", async (req, res, next) => {
       .send(
         "Please enter a valid celebrity format with name, occupation and catchphrase"
       );
+  }
+});
+
+router.get("/celebrities", async (req, res, next) => {
+  try {
+    const foundCelebrities = await Celebrity.find();
+    res.json(foundCelebrities);
+  } catch (error) {
+    res.status(500).send("Internal error");
   }
 });
 
