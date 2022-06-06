@@ -28,4 +28,38 @@ router.get("/movies", async (req, res, next) => {
   }
 });
 
+router.get("/movies/:id", async (req, res, next) => {
+  try {
+    const foundMovie = await Movie.findById(req.params.id).populate(
+      "cast",
+      "name -_id"
+    );
+    res.json(foundMovie);
+  } catch (error) {
+    res.send("Internal error");
+  }
+});
+
+router.delete("/movies/:id", async (req, res, next) => {
+  try {
+    const deleteMovie = await Movie.findByIdAndDelete(req.params.id);
+    res.status(204).send("Deleted movie successfuly");
+  } catch (err) {
+    res.send("No matching id");
+  }
+});
+
+router.post("/movies/:id", async (req, res, next) => {
+  const newMovieValue = req.body;
+  try {
+    const updateMovie = await Movie.findByIdAndUpdate(
+      req.params.id,
+      newMovieValue
+    );
+    res.status(200).json(newMovieValue);
+  } catch (err) {
+    res.send("Error");
+  }
+});
+
 module.exports = router;
