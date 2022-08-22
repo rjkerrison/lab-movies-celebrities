@@ -1,21 +1,26 @@
-//  Add your code here
 const { Schema, model } = require("mongoose");
 
 // define the schema
-const celebritySchema = new Schema({
-  name: {
+const movieSchema = new Schema({
+  title: {
     type: Schema.Types.String,
   },
-  occupation: {
+  genre: {
     type: Schema.Types.String,
   },
-  catchPhrase: {
+  plot: {
     type: Schema.Types.String,
   },
+  cast: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Celebrity",
+    },
+  ],
 });
 
 // declare the model
-const Celebrity = model("Celebrity", celebritySchema);
+const Movie = model("Movie", movieSchema);
 
 // export the model
-module.exports = Celebrity;
+module.exports = Movie;
